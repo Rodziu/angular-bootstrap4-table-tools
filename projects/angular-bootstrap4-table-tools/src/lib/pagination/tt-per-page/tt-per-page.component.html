@@ -1,0 +1,6 @@
+<div class="form-group">
+    <label>{{lang.perPage}}&nbsp;</label>
+    <select class="form-control" [formControl]="tableTools.perPageControl">
+        <option *ngFor="let o of tableTools.perPageOptions" [ngValue]="o.number">{{o.text}}</option>
+    </select>
+</div>

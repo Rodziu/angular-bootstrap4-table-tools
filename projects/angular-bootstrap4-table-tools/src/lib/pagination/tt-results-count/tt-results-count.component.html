@@ -1,0 +1,18 @@
+<!--
+  ~ Angular TableTools Plugin
+  ~  Copyright (c) 2016-2021 Rodziu <mateusz.rohde@gmail.com>
+  ~  License: MIT
+  -->
+<div>
+    {{lang.results}}
+    <span [ngSwitch]="tableTools.dataLength">
+		<span *ngSwitchCase="0">0</span>
+		<span *ngSwitchDefault>
+			{{tableTools.pagination.start}} - {{tableTools.pagination.end}}
+            {{lang.from}} {{tableTools.filteredCount}}
+		</span>
+	</span>
+    <span [hidden]="tableTools.filteredCount === tableTools.dataLength">
+		({{lang.filteredResults}} {{tableTools.dataLength}})
+	</span>
+</div>

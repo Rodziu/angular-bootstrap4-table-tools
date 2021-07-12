@@ -1,0 +1,10 @@
+<!--
+  ~ Angular TableTools Plugin
+  ~  Copyright (c) 2016-2021 Rodziu <mateusz.rohde@gmail.com>
+  ~  License: MIT
+  -->
+
+<td colspan="100%" *ngIf="!(tableTools.data | async)?.length">
+    <tt-loading></tt-loading>
+    <span *ngIf="!tableTools.loading">{{lang.noResults}}</span>
+</td>

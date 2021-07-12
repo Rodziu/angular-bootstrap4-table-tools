@@ -1,0 +1,73 @@
+/*!
+ * Angular TableTools Plugin
+ *  Copyright (c) 2016-2021 Rodziu <mateusz.rohde@gmail.com>
+ *  License: MIT
+ */
+@import "~@fortawesome/fontawesome-free/scss/variables";
+
+@mixin transition($transition...) {
+  -webkit-transition: $transition;
+  -o-transition: $transition;
+  transition: $transition;
+}
+@mixin scale($ratio...) {
+  -webkit-transform: scale($ratio);
+  -ms-transform: scale($ratio); // IE9 only
+  -o-transform: scale($ratio);
+  transform: scale($ratio);
+}
+// pagination
+.pagination {
+  margin: 0;
+}
+// tables
+.table {
+  thead, tbody, tfoot {
+    > tr > th, > tr > td {
+      vertical-align: middle;
+    }
+  }
+  &.table-rowclick tbody tr {
+    cursor: pointer;
+  }
+  thead {
+    th {
+      position: relative;
+      background-image: none !important;
+      padding-right: 12px !important;
+      &[ttSort] {
+        cursor: pointer;
+        user-select: none;
+        &:after{
+          position: relative;
+          right: -8px;
+          font-family: "Font Awesome 5 Free", serif;
+          content: fa-content($fa-var-sort);
+          font-weight: 900;
+          color: #ddd;
+        }
+      }
+      &.sorting-asc:after {
+        content: fa-content($fa-var-sort-up);
+        color: inherit;
+      }
+      &.sorting-desc:after {
+        content: fa-content($fa-var-sort-down);
+        color: inherit;
+      }
+    }
+  }
+  td.actions, th.actions {
+    white-space: nowrap;
+    a {
+      font-size: 18px; display: inline-block; @include transition(all 300ms ease-in-out 0s);
+      &:hover {
+        text-decoration: none; @include scale(1.3);
+      }
+      & + a {
+        margin-left: 7px;
+      }
+    }
+    > i { font-size: 18px; }
+  }
+}

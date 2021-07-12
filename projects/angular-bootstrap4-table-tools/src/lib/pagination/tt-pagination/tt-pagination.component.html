@@ -1,0 +1,29 @@
+<ul class="pagination">
+    <li [ngClass]="{disabled: tableTools.pagination.page == 1}" class="page-item">
+        <a href="javascript:" (click)="tableTools.changePage(1)" title="{{lang.first}}" class="page-link">
+            <i class="fa fa-angle-double-left"></i>
+        </a>
+    </li>
+    <li [ngClass]="{disabled: tableTools.pagination.page == 1}" class="page-item">
+        <a href="javascript:" (click)="tableTools.changePage('prev')" title="{{lang.prev}}" class="page-link">
+            <i class="fa fa-angle-left"></i>
+        </a>
+    </li>
+    <li *ngFor="let p of tableTools.pagination.items" [ngClass]="{active: p == tableTools.pagination.page}"
+        class="page-item">
+        <a href="javascript:" (click)="tableTools.changePage(p)" class="page-link">{{p}}</a>
+    </li>
+    <li [ngClass]="{disabled: tableTools.pagination.page == tableTools.pagination.pages
+		|| tableTools.pagination.pages == 0}" class="page-item">
+        <a href="javascript:" (click)="tableTools.changePage('next')" title="{{lang.next}}" class="page-link">
+            <i class="fa fa-angle-right"></i>
+        </a>
+    </li>
+    <li [ngClass]="{disabled: tableTools.pagination.page == tableTools.pagination.pages
+		|| tableTools.pagination.pages == 0}" class="page-item">
+        <a href="javascript:" (click)="tableTools.changePage(tableTools.pagination.pages)"
+           title="{{lang.last}}" class="page-link">
+            <i class="fa fa-angle-double-right"></i>
+        </a>
+    </li>
+</ul>
