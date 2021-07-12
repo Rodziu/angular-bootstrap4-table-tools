@@ -22,76 +22,99 @@ yarn install
 
 ## Configuration
 
-Language strings and other defaults are configurable through the `tableTools` provider.
+Language strings and other defaults are configurable through the `TableToolsConfig` service.
 
 ```
-angular.module('...').config(['tableToolsProvider', function(tableToolsProvider){
-	tableToolsProvider.perPage = 10;
-}]);
+class AppComponent {
+	constructor(config: TableToolsConfigService) {
+		config.perPage = 10;
+	}
+}
 ```
 
 ## Usage
 
-See [Live Demo](https://mateuszrohde.pl/repository/angular-bootstrap4-table-tools/demo/index.html) and its source code to better understand all of available directives and its usage.
+See [Live Demo](https://mateuszrohde.pl/repository/angular-bootstrap4-table-tools/demo/index.html) and its source code to better understand all of available components and its usage.
 
 ### Basic usage
 
-Create a container with table-tools directive inside which you will be able to work with table data. Bind an array of table data to the directive. Table data should be an array of objects.
+Create an tableTools instance via `TableToolsService.create(config)` method. Table data should be an array of objects. 
 
-TableTools controller is bound to the new scope created by directive in `tableTools` variable. Filtered data is available through `tableTools.data` variable.
+This instance needs to be bound to your table container via `[tableTools]` directive.
+
+Filtered data is available via `instance.data` property which is an `Observable`.
+
+```typescript
+tableToolsInstance: ITableTools<T>; // pass your row type as generic argument
+
+this.tableToolsInstance = tableToolsService.create({
+	collection: [] // table data
+});
+```
 
 ```html
-<div table-tools="tableData">
-	<div ng-repeat="d in tableTools.data">
+<div [tableTools]="tableToolsInstance">
+	<div *ngFor="let d of tableToolsInstance.data | async">
 		{{d}}
 	</div>
 </div>
 ```
 
-You can change the default order of data using `order="field"` directive. Field is the key in each object of tableData, by which the data will be ordered. Use `-field` for descending order.
+You can change the default order of data using `order` property in instance or its config.
 
-You can change number of rows per page and allowed per-page options using `per-page` and `per-page-options` directives.
+You can change number of rows per page and allowed per-page options using `perPage` and `perPageOptions` properties.
 
 ### Sorting
 
-Use `sort="field_name"` directive on column headers to enable column sorting. Order will be changed on click. Clicking with shift key enables sorting by multiple columns.
+Use `ttSort="field_name"` directive on column headers to enable column sorting. Order will be changed on click. Clicking with shift key enables sorting by multiple columns.
  
 ### Data filtering
 
-Use `tt-search` directive to create a search component (input). Typing text inside it will filter the data leaving only rows that match given search string (row is match if any of its object values matches the search string).
+Use `tt-search` component to create a search component (input). Typing text inside it will filter the data leaving only rows that match given search string (row is matched if any of its object values matches the search string).
  
-You can create data filters with `tt-filter="field_name"` directive. It requires an `ng-model` which value would be used to filter the data. If tt-filter element has an value directive, it will be used instead of ng-model (ie. for checkboxes).   
+You can add data filters via `filters` property using `TtFilterGroup` and `TtFilter` classes that extend `FormGroup` and `FormControl` respectively only difference being that `TtFilter` first argument is a filter config object.
 
-tt-filter accepts some options through other directives:
-
-- `tt-filter-empty=""` - if filter value matches tt-filter-empty value, this filter will be skipped
-- `tt-filter-operator=""` - change the default (==) operator used for comparison, available operators are:
-	- ==
-	- &gt;=
-	- <=
-	- &gt;
-	- <
-	- like
-- `tt-filter-or` - if any other filter bound to the same field_name is matched, this filter will pass too
+```typescript
+filters: new TtFilterGroup({
+	firstName: new TtFilter(),
+	lastName: new TtFilter(),
+	idMore: new TtFilter({
+		field: 'id',
+		operator: '>'
+	}),
+	idLess: new TtFilter({
+		field: 'id',
+		operator: '<'
+	}),
+	genderMale: new TtFilter({
+		field: 'gender',
+		or: true
+	}),
+	genderFemale: new TtFilter({
+		field: 'gender',
+		or: true
+	})
+})
+```
 
 ### Pagination
 
-Use `pagination` directive to create pagination compontent.
+Use `tt-pagination` component to create pagination.
 
-Use `tt-per-page` directive to create a component that allows user to change default results per page number.
+Use `tt-per-page` component to create a component that allows user to change default results per page number.
 
 ### Select rows
 
-You can use `tt-select="rowItem"` directive inside each row to create a checkbox that allows user to select given row.
+You can use `<tt-select [item]="row">` component inside each row to create a checkbox that allows user to select given row.
 
-Use `tt-select-all` directive to create a checkbox that selects/deselects all checkboxes created by `tt-select`.
+Use `tt-select-all` component to create a checkbox that selects/deselects all checkboxes created by `tt-select`.
 
-Use `tt-selected-click="callbackFunction"` to do something with selected rows. callbackFunction will be called with an array of selected rows.
+Selected rows can be fetched by using `instance.selected.getSelected()` method.
 
-### Export (requires angularjs-bootstrap)
+### Export (requires angular-bootstrap4)
 
-Use `tt-export` directive to create a component that allows user to easily export currently visible data. Export takes data from HTML, so its exported in a format that is visible in browser.
+Use `tt-export` component to create a component that allows user to easily export currently visible data. Export takes data from HTML, so it's exported in a format that is visible in browser.
 
 ### Server-side processing
 
-Use `tt-url="http://some/url"` to process data on server-side. 
+Use `url` and `resolver` properties to process data on server-side. 

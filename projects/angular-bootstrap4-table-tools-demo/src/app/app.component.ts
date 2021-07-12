@@ -14,7 +14,6 @@ import {
 } from 'angular-bootstrap4-table-tools';
 import {FormControl} from '@angular/forms';
 import {ITableToolsResponse} from '../../../angular-bootstrap4-table-tools/src/lib/table-tools-config.service';
-import {Observable} from 'rxjs';
 
 interface IExample {
     id: string,
