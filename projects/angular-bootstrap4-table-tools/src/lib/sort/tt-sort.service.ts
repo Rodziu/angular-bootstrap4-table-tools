@@ -5,7 +5,6 @@
  */
 import {Injectable} from '@angular/core';
 import {IOrder} from '../table-tools-config.service';
-import {isNumeric} from 'rxjs/internal-compatibility';
 
 @Injectable({
     providedIn: 'root'
@@ -43,7 +42,7 @@ export class TtSortService {
         }
 
         if (typeof a === 'string' && typeof b === 'string') {
-            if (this.isNumeric(a) && isNumeric(b)) {
+            if (this.isNumeric(a) && this.isNumeric(b)) {
                 return parseFloat(a) < parseFloat(b) ? -1 : 1;
             }
             // Compare strings case-insensitively
