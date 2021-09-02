@@ -91,7 +91,9 @@ class TableTools<T extends object> implements ITableTools<T> {
     }
 
     set perPage(value) {
-        this.perPageControl.setValue(value);
+        if (this.perPageControl.value !== value) {
+            this.perPageControl.setValue(value);
+        }
     }
 
     perPageOptions: IPerPageOption[];
