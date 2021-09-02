@@ -235,6 +235,9 @@ class TableTools<T extends object> implements ITableTools<T> {
                 this.data.next(result.data);
                 this.dataLength = result.count;
                 this.filteredCount = result.countFiltered;
+                if (this.pagination.page > 1 && !result.data.length) {
+                    this.changePage(1);
+                }
             }, (e) => {
                 console.error(e);
                 this.data.next([]);
