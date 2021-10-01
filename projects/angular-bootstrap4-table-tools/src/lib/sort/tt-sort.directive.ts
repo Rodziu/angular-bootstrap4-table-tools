@@ -13,9 +13,13 @@ import {IOrder} from '../table-tools-config.service';
     selector: '[ttSort]'
 })
 export class TtSortDirective implements OnInit {
-    @Input() ttSort!: string;
+    @Input() ttSort?: string;
     protected tableTools!: ITableTools<object>;
     protected state?: IOrder['direction'];
+
+    @HostBinding('class.tt-sort') get sort(): boolean {
+        return typeof this.ttSort !== 'undefined';
+    }
 
     @HostBinding('class.sorting-asc') get isAsc(): boolean {
         return this.state === 'asc';
@@ -26,6 +30,9 @@ export class TtSortDirective implements OnInit {
     }
 
     @HostListener('click', ['$event.shiftKey']) click(shiftKey: boolean): void {
+        if (typeof this.ttSort === 'undefined') {
+            return;
+        }
         const orderItem = this.getMyOrder(this.tableTools.order),
             newState = orderItem?.direction === 'asc' ? 'desc' : 'asc';
         if (!shiftKey) {

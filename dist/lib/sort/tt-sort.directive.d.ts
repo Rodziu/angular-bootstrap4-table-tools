@@ -5,9 +5,10 @@ import { IOrder } from '../table-tools-config.service';
 import * as i0 from "@angular/core";
 export declare class TtSortDirective implements OnInit {
     protected tableToolsDirective: TableToolsDirective;
-    ttSort: string;
+    ttSort?: string;
     protected tableTools: ITableTools<object>;
     protected state?: IOrder['direction'];
+    get sort(): boolean;
     get isAsc(): boolean;
     get isDesc(): boolean;
     click(shiftKey: boolean): void;
