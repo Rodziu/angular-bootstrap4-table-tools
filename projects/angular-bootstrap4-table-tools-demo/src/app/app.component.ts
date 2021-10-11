@@ -81,6 +81,9 @@ export class AppComponent {
             this.browserSideInstance.collection = data as unknown as IExample[];
             this.browserSideInstance.filterData();
         });
+        this.browserSideInstance.selected.selectedChanges.subscribe((changes) => {
+            console.log(changes);
+        })
 
         // server side
         config.defaultTableToolsResolver = (

@@ -31,7 +31,11 @@ export class TtSelectComponent implements OnInit {
         });
 
         this.tableToolsDirective.tableTools.selected.selectedChanges.subscribe((selected) => {
-            this.formControl.setValue(selected.includes(this.item));
+            const isSelected = selected.includes(this.item);
+
+            if (isSelected !== this.formControl.value) {
+                this.formControl.setValue(selected.includes(this.item), {emitEvent: false});
+            }
         });
     }
 }

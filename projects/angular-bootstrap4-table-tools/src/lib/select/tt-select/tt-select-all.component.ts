@@ -3,7 +3,7 @@
  *  Copyright (c) 2016-2021 Rodziu <mateusz.rohde@gmail.com>
  *  License: MIT
  */
-import {Component, Host, Input, OnInit} from '@angular/core';
+import {Component, Host, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {TableToolsDirective} from '../../table-tools.directive';
 
@@ -33,7 +33,7 @@ export class TtSelectAllComponent implements OnInit {
         this.tableToolsDirective.tableTools.selected.selectedChanges.subscribe((selected) => {
             const all = selected.length === this.tableToolsDirective.ttSelects.length;
             if (all !== !!this.formControl.value) {
-                this.formControl.setValue(all);
+                this.formControl.setValue(all, {emitEvent: false});
             }
         });
     }
