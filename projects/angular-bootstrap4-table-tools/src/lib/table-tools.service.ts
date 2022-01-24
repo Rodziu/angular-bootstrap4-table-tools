@@ -14,7 +14,7 @@ import {ElementRef, Inject, Injectable} from '@angular/core';
 import {TtPagination} from './pagination/tt-pagination';
 import {DOCUMENT} from '@angular/common';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import {skip} from 'rxjs/operators';
+import {first, skip} from 'rxjs/operators';
 import {TtSortService} from './sort/tt-sort.service';
 import {FormControl} from '@angular/forms';
 import {TtSearchService} from './search/tt-search.service';
@@ -177,11 +177,12 @@ class TableTools<T extends object> implements ITableTools<T> {
 
         setTimeout(() => {
             if (typeof options.asyncConfigurator === 'function') {
-                const subscription = options.asyncConfigurator(this).subscribe(() => {
-                    subscription.unsubscribe();
-                    this.configuring = false;
-                    this.filterData();
-                });
+                options.asyncConfigurator(this)
+                    .pipe(first())
+                    .subscribe(() => {
+                        this.configuring = false;
+                        this.filterData();
+                    });
             } else {
                 this.filterData();
             }
