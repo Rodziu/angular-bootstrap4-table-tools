@@ -13,7 +13,7 @@ import {
 import {ElementRef, Inject, Injectable} from '@angular/core';
 import {TtPagination} from './pagination/tt-pagination';
 import {DOCUMENT} from '@angular/common';
-import {BehaviorSubject, Subscription} from 'rxjs';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {skip} from 'rxjs/operators';
 import {TtSortService} from './sort/tt-sort.service';
 import {FormControl} from '@angular/forms';
@@ -32,6 +32,7 @@ export interface ITableToolsOptions<T extends object> {
     collection?: T[];
     url?: string;
     resolver?: TableToolsResolver<T>;
+    asyncConfigurator?: (tableInstance: ITableTools<T>) => Observable<void>;
 }
 
 export interface ITableTools<T extends object> extends ITableToolsOptions<T> {
@@ -123,6 +124,8 @@ class TableTools<T extends object> implements ITableTools<T> {
         timeout: null
     };
 
+    private configuratorSubscription?: Subscription;
+
     constructor(
         options: Partial<ITableToolsOptions<T>>,
         config: TableToolsConfigService,
@@ -168,10 +171,26 @@ class TableTools<T extends object> implements ITableTools<T> {
             this.resolver = this.resolver || config.defaultTableToolsResolver;
         }
 
-        this.filterData();
+        if (typeof options.asyncConfigurator === 'function') {
+            this.configuratorSubscription = options.asyncConfigurator(this).subscribe(() => {
+                console.log('configurator resolved');
+                this.configuratorSubscription?.unsubscribe();
+                this.configuratorSubscription = undefined;
+                this.filterData();
+            });
+        } else {
+            this.filterData();
+        }
     }
 
     filterData(): void {
+        if (typeof this.configuratorSubscription !== 'undefined') {
+            console.log('filterData ignored');
+            return;
+        }
+
+        console.log('filterData');
+
         if (typeof this.resolver !== 'undefined') {
             this.serverSide();
         } else {
