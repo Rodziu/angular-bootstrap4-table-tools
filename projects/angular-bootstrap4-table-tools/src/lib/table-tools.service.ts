@@ -124,7 +124,7 @@ class TableTools<T extends object> implements ITableTools<T> {
         timeout: null
     };
 
-    private configuratorSubscription?: Subscription;
+    private configuring = false;
 
     constructor(
         options: Partial<ITableToolsOptions<T>>,
@@ -172,24 +172,26 @@ class TableTools<T extends object> implements ITableTools<T> {
         }
 
         if (typeof options.asyncConfigurator === 'function') {
-            this.configuratorSubscription = options.asyncConfigurator(this).subscribe(() => {
-                console.log('configurator resolved');
-                this.configuratorSubscription?.unsubscribe();
-                this.configuratorSubscription = undefined;
-                this.filterData();
-            });
-        } else {
-            this.filterData();
+            this.configuring = true;
         }
+
+        setTimeout(() => {
+            if (typeof options.asyncConfigurator === 'function') {
+                const subscription = options.asyncConfigurator(this).subscribe(() => {
+                    subscription.unsubscribe();
+                    this.configuring = false;
+                    this.filterData();
+                });
+            } else {
+                this.filterData();
+            }
+        })
     }
 
     filterData(): void {
-        if (typeof this.configuratorSubscription !== 'undefined') {
-            console.log('filterData ignored');
+        if (this.configuring) {
             return;
         }
-
-        console.log('filterData');
 
         if (typeof this.resolver !== 'undefined') {
             this.serverSide();
