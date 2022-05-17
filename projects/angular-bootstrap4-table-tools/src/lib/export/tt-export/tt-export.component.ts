@@ -52,7 +52,7 @@ export class TtExportComponent extends AbstractTableToolsTemplateComponent {
         headers.forEach((h, idx) => {
             if (!h.classList.contains('ignore-export')) {
                 this.columns.push({
-                    txt: h.innerHTML,
+                    txt: h.textContent?.trim() || '',
                     idx,
                     checked: true
                 });
