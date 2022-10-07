@@ -36,6 +36,12 @@ export class TtSortDirective implements OnInit {
         const orderItem = this.getMyOrder(this.tableTools.order),
             newState = orderItem?.direction === 'asc' ? 'desc' : 'asc';
         if (!shiftKey) {
+            if (orderItem?.direction === 'desc') {
+                this.tableTools.order.splice(this.tableTools.order.indexOf(orderItem), 1);
+                this.tableTools.order = [...this.tableTools.order];
+                return;
+            }
+
             this.tableTools.order = [{field: this.ttSort, direction: newState}];
         } else {
             if (!orderItem) {
