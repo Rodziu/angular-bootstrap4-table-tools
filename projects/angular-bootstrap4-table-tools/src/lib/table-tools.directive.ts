@@ -9,7 +9,7 @@ import {
     ElementRef,
     Input,
     OnInit,
-    QueryList
+    QueryList, ViewContainerRef
 } from '@angular/core';
 import {ITableTools} from './table-tools.service';
 import {TtSelectComponent} from './select/tt-select/tt-select.component';
@@ -22,11 +22,18 @@ export class TableToolsDirective implements OnInit {
     @ContentChildren(TtSelectComponent, {descendants: true}) ttSelects!: QueryList<TtSelectComponent>;
 
     constructor(
-        public elementRef: ElementRef<HTMLElement>
+        public elementRef: ElementRef<HTMLElement>,
+        private viewContainerRef: ViewContainerRef
     ) {
     }
 
     ngOnInit(): void {
-        this.tableTools.elementRef = this.elementRef;
+        if (this.elementRef.nativeElement.nodeType === Node.COMMENT_NODE) {
+            this.tableTools.elementRef = new ElementRef<HTMLElement>(
+                this.viewContainerRef.element.nativeElement.previousElementSibling
+            );
+        } else {
+            this.tableTools.elementRef = this.elementRef;
+        }
     }
 }
