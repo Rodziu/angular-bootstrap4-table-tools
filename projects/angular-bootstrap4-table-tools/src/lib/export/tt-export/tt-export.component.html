@@ -65,7 +65,7 @@
                             (click)="doExport(exportType.key, exportType.value)" [disabled]="exporting">
                         {{exportType.value.lang}}
                         <span *ngIf="exporting == exportType.key">
-							<i class="fa fa-spinner fa-spin"></i>
+							<i class="fa fa-circle-notch fa-spin"></i>
 						</span>
                     </button>
                 </div>
